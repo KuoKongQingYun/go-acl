@@ -14,9 +14,9 @@ func Apply(name string, replace, inherit bool, owner, group *windows.SID, entrie
 	var oldACL windows.Handle
 	if owner != nil {
 		pSecurityDescriptor := api.MakeNewSecurityDescriptor()
-		InitializeSecurityDescriptor(pSecurityDescriptor, api.SECURITY_DESCRIPTOR_REVISION)
-		SetSecurityDescriptorOwner(pSecurityDescriptor, owner, true)
-		SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, pSecurityDescriptor)
+		api.InitializeSecurityDescriptor(pSecurityDescriptor, api.SECURITY_DESCRIPTOR_REVISION)
+		api.SetSecurityDescriptorOwner(pSecurityDescriptor, owner, true)
+		api.SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, pSecurityDescriptor)
 	}
 	if !replace {
 		var secDesc windows.Handle

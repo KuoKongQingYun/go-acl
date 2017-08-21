@@ -42,7 +42,7 @@ func InitializeSecurityDescriptor(pSecurityDescriptor *SECURITY_DESCRIPTOR, dwRe
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379585(v=vs.85).aspx
-func SetSecurityDescriptorOwner(pSecurityDescriptor *SECURITY_DESCRIPTOR, owner *windows.SID, dacl, bOwnerDefaulted bool) error {
+func SetSecurityDescriptorOwner(pSecurityDescriptor *SECURITY_DESCRIPTOR, owner *windows.SID, bOwnerDefaulted bool) error {
 	var _bOwnerDefaulted int32
 	if bOwnerDefaulted {
 		_bOwnerDefaulted = 1
