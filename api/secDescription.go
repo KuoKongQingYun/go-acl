@@ -13,8 +13,8 @@ const (
 )
 
 var (
-	procSetSecurityDescriptorOwner    = advapi32.MustFindProc("SetSecurityDescriptorOwner")
-	procInitializeSecurityDescriptorW = advapi32.MustFindProc("InitializeSecurityDescriptorW")
+	procSetSecurityDescriptorOwner   = advapi32.MustFindProc("SetSecurityDescriptorOwner")
+	procInitializeSecurityDescriptor = advapi32.MustFindProc("InitializeSecurityDescriptor")
 )
 
 type SECURITY_DESCRIPTOR struct{}
@@ -31,7 +31,7 @@ func MakeNewSecurityDescriptor() *SECURITY_DESCRIPTOR {
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378863(v=vs.85).aspx
 func InitializeSecurityDescriptor(pSecurityDescriptor *SECURITY_DESCRIPTOR, dwRevision uint32) error {
-	ret, _, err := procInitializeSecurityDescriptorW.Call(
+	ret, _, err := procInitializeSecurityDescriptor.Call(
 		uintptr(unsafe.Pointer(pSecurityDescriptor)),
 		SECURITY_DESCRIPTOR_REVISION,
 	)
