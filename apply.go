@@ -28,7 +28,7 @@ func Apply(name string, replace, inherit bool, owner, group *windows.SID, entrie
 			api.SetSecurityDescriptorOwner(secDesc, owner, true)
 			api.SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, secDesc)
 		}
-		defer windows.LocalFree(secDesc)
+		defer windows.LocalFree(windows.Handle(unsafe.Pointer(secDesc)))
 	}
 	var acl windows.Handle
 	if err := api.SetEntriesInAcl(
