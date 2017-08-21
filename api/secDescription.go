@@ -13,7 +13,7 @@ const (
 )
 
 var (
-	procSetSecurityDescriptorOwnerW   = advapi32.MustFindProc("SetSecurityDescriptorOwnerW")
+	procSetSecurityDescriptorOwner    = advapi32.MustFindProc("SetSecurityDescriptorOwner")
 	procInitializeSecurityDescriptorW = advapi32.MustFindProc("InitializeSecurityDescriptorW")
 )
 
@@ -49,7 +49,7 @@ func SetSecurityDescriptorOwner(pSecurityDescriptor *SECURITY_DESCRIPTOR, owner 
 	} else {
 		_bOwnerDefaulted = 0
 	}
-	ret, _, err := procGetNamedSecurityInfoW.Call(
+	ret, _, err := procSetSecurityDescriptorOwner.Call(
 		uintptr(unsafe.Pointer(pSecurityDescriptor)),
 		uintptr(unsafe.Pointer(owner)),
 		uintptr(_bOwnerDefaulted),
