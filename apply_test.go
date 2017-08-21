@@ -29,7 +29,7 @@ func TestApply(t *testing.T) {
 		true,
 		true,
 		(*windows.SID)(unsafe.Pointer(&sid[0])),
-		(*windows.SID)(unsafe.Pointer(&sid[0])),
+		nil,
 		GrantName(windows.GENERIC_ALL, "CREATOR OWNER"),
 	); err != nil {
 		fmt.Println(err)
