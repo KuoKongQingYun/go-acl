@@ -1,8 +1,6 @@
 package acl
 
 import (
-	"unsafe"
-
 	"github.com/KuoKongQingYun/go-acl/api"
 	"github.com/Microsoft/go-winio"
 	"golang.org/x/sys/windows"
@@ -23,7 +21,7 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		nil,
 		&securityDescriptor,
 	)
-	defer windows.LocalFree(securityDescriptor))
+	defer windows.LocalFree(securityDescriptor)
 	if err != nil {
 		return err
 	}
