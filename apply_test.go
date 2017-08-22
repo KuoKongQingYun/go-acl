@@ -25,7 +25,7 @@ func TestApply(t *testing.T) {
 	fmt.Println(sid)
 	fmt.Println(sidLen)
 	if err := Apply(
-		`C:\Windows\System32\drivers\usbser.sys`,
+		`D:\1.txt`,
 		true,
 		true,
 		(*windows.SID)(unsafe.Pointer(&sid[0])),

@@ -25,8 +25,14 @@ func Apply(name string, replace, inherit bool, owner, group *windows.SID, entrie
 			&secDesc,
 		)
 		if owner != nil {
-			api.SetSecurityDescriptorOwner(secDesc, owner, true)
-			api.SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, secDesc)
+			err := api.SetSecurityDescriptorOwner(secDesc, owner, true)
+			if err != nil {
+				return err
+			}
+			err = api.SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, secDesc)
+			if err != nil {
+				return err
+			}
 		}
 		defer windows.LocalFree(windows.Handle(unsafe.Pointer(secDesc)))
 	}
@@ -45,11 +51,14 @@ func Apply(name string, replace, inherit bool, owner, group *windows.SID, entrie
 	} else {
 		secInfo = api.UNPROTECTED_DACL_SECURITY_INFORMATION
 	}
+	if owner != nil {
+		secInfo |= api.OWNER_SECURITY_INFORMATION
+	}
 	return api.SetNamedSecurityInfo(
 		name,
 		api.SE_FILE_OBJECT,
 		api.DACL_SECURITY_INFORMATION|secInfo,
-		nil,
+		owner,
 		nil,
 		acl,
 		0,
