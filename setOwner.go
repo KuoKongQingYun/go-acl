@@ -1,6 +1,8 @@
 package acl
 
 import (
+	"unsafe"
+
 	"github.com/KuoKongQingYun/go-acl/api"
 	"github.com/Microsoft/go-winio"
 	"golang.org/x/sys/windows"
@@ -9,17 +11,19 @@ import (
 //
 func SetOwner(name string, inherit bool, owner *windows.SID) error {
 	winio.EnableProcessPrivileges([]string{`SeTakeOwnershipPrivilege`})
-	var secDesc *api.SECURITY_DESCRIPTOR
+	var securityDescriptor windows.Handle
+	var oldDacl windows.Handle
 	err := api.GetNamedSecurityInfo(
 		name,
 		api.SE_FILE_OBJECT,
 		api.DACL_SECURITY_INFORMATION,
 		nil,
 		nil,
+		&oldDacl,
 		nil,
-		nil,
-		&secDesc,
+		&securityDescriptor,
 	)
+	defer windows.LocalFree(securityDescriptor))
 	if err != nil {
 		return err
 	}
@@ -34,7 +38,7 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		api.SE_FILE_OBJECT,
 		secInfo|api.OWNER_SECURITY_INFORMATION,
 		owner,
-		owner,
+		nil,
 		0,
 		0,
 	)
