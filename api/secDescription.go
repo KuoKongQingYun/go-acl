@@ -19,18 +19,18 @@ var (
 
 type SECURITY_DESCRIPTOR struct{}
 
-func MakeNewSecurityDescriptor() *SECURITY_DESCRIPTOR {
+func MakeNewSecurityDescriptor() windows.Handle {
 	var SECURITY_DESCRIPTOR_MIN_LENGTH uint32
 	if runtime.GOARCH == `386` {
 		SECURITY_DESCRIPTOR_MIN_LENGTH = 0x20
 	} else if runtime.GOARCH == `amd64` {
 		SECURITY_DESCRIPTOR_MIN_LENGTH = 0x40
 	}
-	return (*SECURITY_DESCRIPTOR)(unsafe.Pointer((&(make([]byte, SECURITY_DESCRIPTOR_MIN_LENGTH)[0]))))
+	return windows.Handle(unsafe.Pointer((&(make([]byte, SECURITY_DESCRIPTOR_MIN_LENGTH)[0]))))
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa378863(v=vs.85).aspx
-func InitializeSecurityDescriptor(pSecurityDescriptor *SECURITY_DESCRIPTOR, dwRevision uint32) error {
+func InitializeSecurityDescriptor(pSecurityDescriptor windows.Handle, dwRevision uint32) error {
 	ret, _, err := procInitializeSecurityDescriptor.Call(
 		uintptr(unsafe.Pointer(pSecurityDescriptor)),
 		SECURITY_DESCRIPTOR_REVISION,
@@ -42,7 +42,7 @@ func InitializeSecurityDescriptor(pSecurityDescriptor *SECURITY_DESCRIPTOR, dwRe
 }
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa379585(v=vs.85).aspx
-func SetSecurityDescriptorOwner(pSecurityDescriptor *SECURITY_DESCRIPTOR, owner *windows.SID, bOwnerDefaulted bool) error {
+func SetSecurityDescriptorOwner(pSecurityDescriptor windows.Handle, owner *windows.SID, bOwnerDefaulted bool) error {
 	var _bOwnerDefaulted int32
 	if bOwnerDefaulted {
 		_bOwnerDefaulted = 1
