@@ -1,8 +1,6 @@
 package acl
 
 import (
-	"fmt"
-
 	"github.com/KuoKongQingYun/go-acl/api"
 	"github.com/Microsoft/go-winio"
 	"golang.org/x/sys/windows"
@@ -10,7 +8,7 @@ import (
 
 //
 func SetOwner(name string, inherit bool, owner *windows.SID) error {
-	fmt.Println(winio.EnableProcessPrivileges([]string{`SeTakeOwnershipPrivilege`}))
+	winio.EnableProcessPrivileges([]string{`SeTakeOwnershipPrivilege`})
 	var securityDescriptor windows.Handle
 	var oldDacl windows.Handle
 	err := api.GetNamedSecurityInfo(

@@ -17,7 +17,7 @@ func SetFileSecurity(lpFileName string, SecurityInformation uint32, pSecurityDes
 		uintptr(SecurityInformation),
 		uintptr(unsafe.Pointer(pSecurityDescriptor)),
 	)
-	if ret != 0 {
+	if ret == 0 {
 		return err
 	}
 	return nil
