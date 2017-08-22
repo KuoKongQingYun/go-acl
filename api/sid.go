@@ -115,12 +115,12 @@ var (
 )
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/aa446585.aspx
-func CreateWellKnownSid(sidType int32, sidDomain, sid *windows.SID, sidLen *uint32) error {
+func CreateWellKnownSid(sidType int32, DomainSid, pSid *windows.SID, cbSid *uint32) error {
 	ret, _, err := procCreateWellKnownSid.Call(
 		uintptr(sidType),
-		uintptr(unsafe.Pointer(sidDomain)),
-		uintptr(unsafe.Pointer(sid)),
-		uintptr(unsafe.Pointer(sidLen)),
+		uintptr(unsafe.Pointer(DomainSid)),
+		uintptr(unsafe.Pointer(pSid)),
+		uintptr(unsafe.Pointer(cbSid)),
 	)
 	if ret == 0 {
 		return err
