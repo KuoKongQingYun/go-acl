@@ -29,7 +29,7 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		api.SE_FILE_OBJECT,
 		secInfo|api.OWNER_SECURITY_INFORMATION,
 		owner,
-		nil,
+		owner,
 		0,
 		0,
 	)
