@@ -13,7 +13,7 @@ import (
 func Apply(name string, replace, inherit bool, entries ...api.ExplicitAccess) error {
 	var oldDacl windows.Handle
 	if !replace {
-		var securityDescriptor *api.SECURITY_DESCRIPTOR
+		var securityDescriptor windows.Handle
 		api.GetNamedSecurityInfo(
 			name,
 			api.SE_FILE_OBJECT,
@@ -24,7 +24,7 @@ func Apply(name string, replace, inherit bool, entries ...api.ExplicitAccess) er
 			nil,
 			&securityDescriptor,
 		)
-		defer windows.LocalFree(windows.Handle(unsafe.Pointer(securityDescriptor)))
+		defer windows.LocalFree(securityDescriptor)
 	}
 	var acl windows.Handle
 	if err := api.SetEntriesInAcl(
