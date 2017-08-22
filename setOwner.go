@@ -8,7 +8,7 @@ import (
 //
 func SetOwner(name string, inherit bool, owner *windows.SID) error {
 	var secDesc *api.SECURITY_DESCRIPTOR
-	api.GetNamedSecurityInfo(
+	err := api.GetNamedSecurityInfo(
 		name,
 		api.SE_FILE_OBJECT,
 		api.DACL_SECURITY_INFORMATION,
@@ -18,13 +18,16 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		nil,
 		&secDesc,
 	)
+	if err != nil {
+		return err
+	}
 	var secInfo uint32
 	if !inherit {
 		secInfo = api.PROTECTED_DACL_SECURITY_INFORMATION
 	} else {
 		secInfo = api.UNPROTECTED_DACL_SECURITY_INFORMATION
 	}
-	return api.SetNamedSecurityInfo(
+	err = api.SetNamedSecurityInfo(
 		name,
 		api.SE_FILE_OBJECT,
 		secInfo|api.OWNER_SECURITY_INFORMATION,
@@ -32,5 +35,13 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		owner,
 		0,
 		0,
+	)
+	if err != nil {
+		return err
+	}
+	return api.SetFileSecurity(
+		name,
+		api.OWNER_SECURITY_INFORMATION,
+		(*api.SECURITY_DESCRIPTOR)(owner),
 	)
 }
