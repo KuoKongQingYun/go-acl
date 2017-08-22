@@ -18,9 +18,19 @@ func SetOwner(name string, inherit bool, owner *windows.SID) error {
 		nil,
 		&secDesc,
 	)
-	err := api.SetSecurityDescriptorOwner(secDesc, owner, true)
-	if err != nil {
-		return err
+	var secInfo uint32
+	if !inherit {
+		secInfo = api.PROTECTED_DACL_SECURITY_INFORMATION
+	} else {
+		secInfo = api.UNPROTECTED_DACL_SECURITY_INFORMATION
 	}
-	return api.SetFileSecurity(name, api.OWNER_SECURITY_INFORMATION, secDesc)
+	return api.SetNamedSecurityInfo(
+		name,
+		api.SE_FILE_OBJECT,
+		secInfo|api.OWNER_SECURITY_INFORMATION,
+		owner,
+		nil,
+		0,
+		0,
+	)
 }

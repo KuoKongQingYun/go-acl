@@ -24,5 +24,5 @@ func TestSetOwner(t *testing.T) {
 	fmt.Println(err)
 	fmt.Println(sid)
 	fmt.Println(sidLen)
-	SetOwner(`D:\1.txt`, true, (*windows.SID)(unsafe.Pointer(&sid[0])))
+	fmt.Println(SetOwner(`D:\1.txt`, true, (*windows.SID)(unsafe.Pointer(&sid[0]))))
 }
